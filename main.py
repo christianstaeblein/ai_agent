@@ -10,11 +10,19 @@ def main():
     #getting command line arguments
     parser = argparse.ArgumentParser(description="Chatbot")
     parser.add_argument("user_prompt", type=str, help="User prompt")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
 
 
+
+    #My variables
     role = "user"
     content = args.user_prompt
+
+    my_messages = [
+        {"role": role, "content": args.user_prompt},
+    ]
+
 
     #Getting environmental parameters
     load_dotenv()
@@ -33,21 +41,18 @@ def main():
     #Sending prompt
     response = client.chat.completions.create(
         model="openrouter/free",
-        messages=[
-            {
-                "role": role,
-                "content": content,
-            }
-        ],
+        messages=my_messages,
     )
 
 
     #Printing prompt response and usage to console
-    print(f"Prompt tokens: {response.usage.prompt_tokens}")
-    print(f"Response tokens: {response.usage.completion_tokens}")
-    print("\n------")
-    print(f"\n{role} prompt: {content}")
-    print("\n------\n")
+    if args.verbose:
+        print(f"Prompt tokens: {response.usage.prompt_tokens}")
+        print(f"Response tokens: {response.usage.completion_tokens}")
+        print("\n------")
+        print(f"User prompt: {content}")
+        print("\n------\n")
+
     print(response.choices[0].message.content)
 
 
