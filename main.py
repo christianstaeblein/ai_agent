@@ -4,6 +4,8 @@ from openai import OpenAI
 
 
 def main():
+    role = "user"
+    content = "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum."
 
     load_dotenv()
     api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -20,13 +22,17 @@ def main():
         model="openrouter/free",
         messages=[
             {
-                "role": "user",
-                "content": "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.",
+                "role": role,
+                "content": content,
             }
         ],
     )
 
-
+    print(f"\n{role} prompt: {content}")
+    print("\n------")
+    print(f"Prompt tokens: {response.usage.prompt_tokens}")
+    print(f"Response tokens: {response.usage.completion_tokens}")
+    print("------\n")
     print(response.choices[0].message.content)
 
 
