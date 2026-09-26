@@ -13,7 +13,25 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
         if not os.path.isdir(target_dir):
             return f'Error: "{directory}" is not a directory'
 
-        return f'Success: "{directory}" is within the working directory'
+
+        lines = []
+
+        def walk(target_dir, indent=""):
+            for item in os.scandir(target_dir):
+                lines.append(
+                    f"{indent}- {item.name}: "
+                    f"file_size={item.stat().st_size} bytes, "
+                    f"is_dir={item.is_dir()}"
+                )
+
+                if item.is_dir():
+                    walk(item.path, indent + "")
+
+        walk(target_dir)
+
+        return "\n".join(lines)
+
+
 
     except Exception as e:
         return f"Error: {e}"
